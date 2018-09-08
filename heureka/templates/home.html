@@ -1,0 +1,13 @@
+{% extends "left_navigation_base.html" %}
+
+{% block content %}
+    {% for id, category in tile_categories.items() %}
+        <div><a href="{{ build_url(category['normalized_title'], id=id) }}">{{ category["title"] }}</a></div>
+    {% endfor %}
+    {% if pages_count > 1 %}
+        {% for i in range(pages_count) %}
+            <a href="{{ build_url('', page=i) }}">{{ i + 1 }}</a>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+

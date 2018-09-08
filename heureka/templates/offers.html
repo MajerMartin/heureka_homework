@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <div>
+            <a href="{{ build_url(url_for('render_products', category=category['normalized_title']), id=category['categoryId']) }}">{{ category["title"] }}</a>
+            >
+            {{ title }}
+        </div>
+        <hr/>
+        <div>{{ img_urls }}</div>
+        <hr/>
+        <p>{{ description }}</p>
+        <hr/>
+        {% for offer in eshops %}
+            <p>{{ offer }}</p>
+        {% endfor %}
+    </body>
+</html>
