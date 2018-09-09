@@ -4,7 +4,10 @@ sys.path.append("..")
 from flask import render_template
 from math import ceil
 from api import get_categories, get_products, get_offers, get_products_count
-from utils import clean_string, build_url
+from utils import clean_string
+from config import config
+from Pagination import Pagination
+
 
 def get_products_statistics(products):
     for product in products:
@@ -28,8 +31,10 @@ def get_products_statistics(products):
 
     # TODO: solve missing desc and img in template?
     return products
-    
-def products(category_id, page, products_per_page=5):
+
+def products(category_id, page):
+    products_per_page = config["products"]["pagination"]["per_page"]
+
     # recollect list of categories for left menu
     categories = get_categories()
 
@@ -41,11 +46,21 @@ def products(category_id, page, products_per_page=5):
 
     # get total products count for pagination
     products_count = get_products_count(category_id)
-    pages_count = ceil(products_count / products_per_page)
+    
+    pagination = Pagination(
+        products_per_page,
+        config["products"]["pagination"]["truncation_limit"],
+        left_edge=config["products"]["pagination"]["left_edge"],
+        right_edge=config["products"]["pagination"]["right_edge"],
+        left_current=config["products"]["pagination"]["left_current"],
+        right_current=config["products"]["pagination"]["right_current"]
+    )
+
+    pagination.set_current(page, products_count)
     
     # TODO: async load next page - user is more likely to visit it
     
     return render_template("products.html", title="Products",
                            categories=categories, products=products,
-                           page=page, pages_count=pages_count,
-                           category_id=category_id, build_url=build_url)
+                           pagination=pagination,
+                           category_id=category_id)

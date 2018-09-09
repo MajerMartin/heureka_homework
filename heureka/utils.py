@@ -1,6 +1,6 @@
 import re
 import json
-from flask import abort
+from flask import abort, url_for, request
 from unidecode import unidecode
 from urllib.parse import quote
 from urllib.error import HTTPError
@@ -29,11 +29,10 @@ def clean_string(text):
     # normalize rest of the string
     return quote(text)
 
-# TODO: write test for this one
-def build_url(*args, **kwargs):
-    base = "/".join(args)
-    params = "&".join(["{}={}".format(key, value) for key, value in kwargs.items()])
-
-    return "{}?{}".format(base, params)
+def url_for_page(page, kwargs={}):
+    args = request.view_args.copy()
+    args["page"] = page
+    all_args = {**args, **kwargs}
+    return url_for(request.endpoint, **all_args)
     
 

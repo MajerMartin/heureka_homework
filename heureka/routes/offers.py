@@ -3,7 +3,7 @@ sys.path.append("..")
 
 from flask import render_template
 from api import get_product, get_category, get_offers
-from utils import clean_string, build_url
+from utils import clean_string
 
 def offers(product_id):
     # download single product info
@@ -37,5 +37,4 @@ def offers(product_id):
 
     return render_template("offers.html", title=product["title"],
                            category=category, img_urls=img_urls,
-                           description=description, eshops=eshops,
-                           build_url=build_url)
+                           description=description, eshops=eshops)

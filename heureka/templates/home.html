@@ -1,13 +1,10 @@
+{% from "macros.html" import build_category_link, render_pagination %}
 {% extends "left_navigation_base.html" %}
 
 {% block content %}
     {% for id, category in tile_categories.items() %}
-        <div><a href="{{ build_url(category['normalized_title'], id=id) }}">{{ category["title"] }}</a></div>
+        <div>{{ build_category_link(id, category) }}</div>
     {% endfor %}
-    {% if pages_count > 1 %}
-        {% for i in range(pages_count) %}
-            <a href="{{ build_url('', page=i) }}">{{ i + 1 }}</a>
-        {% endfor %}
-    {% endif %}
+    {{ render_pagination(pagination) }}
 {% endblock %}
 

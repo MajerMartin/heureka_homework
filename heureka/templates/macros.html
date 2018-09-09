@@ -1,0 +1,22 @@
+{% macro build_category_link(id, category) %}
+    <a href="{{ url_for('render_products', category=category['normalized_title'], id=id) }}">{{ category["title"] }}</a>
+{% endmacro %}
+
+{% macro render_pagination(pagination) %}
+    {{kwargs}}
+    {% if pagination.pages_count > 1 %}
+        {% if pagination.has_previous %}
+            <a href="{{ url_for_page(pagination.current_page-1, kwargs) }}"> &lt;&lt; Prev</a>
+        {% endif %}
+        {% for page in pagination.yield_pages() %}
+            {% if page == pagination.ellipsis %}
+                {{ pagination.ellipsis }}
+            {% else %}
+            <a href="{{ url_for_page(page, kwargs) }}">{{ page + 1 }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+            <a href="{{ url_for_page(pagination.current_page+1, kwargs) }}">Next &gt;&gt;</a>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
