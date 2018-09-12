@@ -10,12 +10,15 @@ from Pagination import Pagination
 
 
 def get_products_statistics(products):
+    description_placeholder = config["placeholders"]["description"]
+    img_url_placeholder = config["placeholders"]["img_url"]
+
     for product in products:
         product["normalized_title"] = clean_string(product["title"])
-        product["min_price"] = 10e10
+        product["min_price"] = sys.maxsize
         product["max_price"] = 0
-        product["description"] = None
-        product["img_url"] = None
+        product["description"] = description_placeholder
+        product["img_url"] = img_url_placeholder
 
         offers = get_offers(product["productId"])
 
@@ -23,10 +26,10 @@ def get_products_statistics(products):
             product["min_price"] = min(product["min_price"], offer["price"])
             product["max_price"] = max(product["max_price"], offer["price"])
 
-            if not product["description"] and offer.get("description"):
-                product["desc"] = offer["description"]
+            if product["description"] == description_placeholder and offer.get("description"):
+                product["description"] = offer["description"]
 
-            if not product["img_url"] and offer.get("img_url"):
+            if product["img_url"] == img_url_placeholder and offer.get("img_url"):
                 product["img_url"] = offer["img_url"]
 
     # TODO: solve missing desc and img in template?
@@ -43,7 +46,7 @@ def products(category_id, page):
     
     products = get_products(category_id, offset, products_per_page)
     products = get_products_statistics(products)
-
+    
     # get total products count for pagination
     products_count = get_products_count(category_id)
     

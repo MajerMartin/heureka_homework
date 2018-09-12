@@ -1,13 +1,31 @@
 {% from "macros.html" import render_pagination %}
 {% extends "left_navigation_base.html" %}
+{% set truncation_limit = config["products"]["description"]["truncation_limit"] %}
 
 {% block content %}
     {% for product in products %}
-        <div><a href="{{ url_for('render_offers', category=categories[category_id]['normalized_title'], product=product['normalized_title'], id=product['productId']) }}">{{ product["title"] }}</a></div>
-        <div>{{ product["min_price"] }} - {{ product["max_price"] }}</div>
-        <div>{{ product["img_url"] }}</div>
-        <div>{{ product["description"] }}</div>
-        <hr/>
+        {% set url = url_for('render_offers', category=categories[category_id]['normalized_title'], product=product['normalized_title'], id=product['productId']) %}
+        <div class="row border border-gray rounded product-tile">
+            <div class="col-sm-3 text-center">
+                <img class="img-thumbnail vertical-center" src="{{ product['img_url'] }}" alt="">
+            </div>
+            <div class="col-sm-6">
+                <h4>
+                    <a href="{{ url }}">{{ product["title"] }}</a>
+                </h4>
+                <p class="description">
+                    {% if product["description"]|length > truncation_limit %}
+                        {{ product["description"][:truncation_limit] + "..." }}
+                    {% else %}
+                        {{ product["description"] }}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-sm-3 text-center my-auto">
+                <p><b>{{ product["min_price"]|int }} - {{ product["max_price"]|int }} Kč</b></p>
+                <a class="btn btn-primary" href="{{ url }}" role="button">Porovnat ceny</a>
+            </div>
+        </div>
     {% endfor %}
     {{ render_pagination(pagination, id=category_id) }}
 {% endblock %}

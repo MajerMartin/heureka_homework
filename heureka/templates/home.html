@@ -2,9 +2,21 @@
 {% extends "left_navigation_base.html" %}
 
 {% block content %}
+<div class="row">
     {% for id, category in tile_categories.items() %}
-        <div>{{ build_category_link(id, category) }}</div>
+        {% if loop.index > 1 and (loop.index - 1) % 3 == 0 %}
+            </div>
+            <div class="row">
+        {% endif %}
+        <div class="col-sm-4 mb-3">
+            <div class="card text-center">
+                {{ build_category_link(id, category, title='<img class="card-img-top mx-auto img-thumbnail" src="/static/img/placeholder.png" alt="">') }}
+                <div class="card-body">
+                    <h5 class="card-title">{{ build_category_link(id, category) }}</h5>
+                </div> 
+            </div>  
+        </div> 
     {% endfor %}
+    </div>
     {{ render_pagination(pagination) }}
 {% endblock %}
-

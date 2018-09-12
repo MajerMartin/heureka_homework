@@ -2,8 +2,10 @@ from json import load
 from flask import Flask, request
 from routes import home, products, offers, page_not_found
 from utils import url_for_page
+from config import config
 
 app = Flask(__name__)
+app.jinja_env.globals["config"] = config
 app.jinja_env.globals["url_for_page"] = url_for_page
 
 @app.route("/")

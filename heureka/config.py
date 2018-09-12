@@ -17,6 +17,14 @@ config = {
             "right_edge": 2,
             "left_current": 3,
             "right_current": 3
+        },
+        "description": {
+            "truncation_limit": 300
         }
+    },
+    "placeholders": {
+        "description": "Popis produktu není dostupný.",
+        "img_url": "/static/img/placeholder.png"
     }
+
 }

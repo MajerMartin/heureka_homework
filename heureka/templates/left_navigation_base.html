@@ -2,10 +2,20 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <ul>
-        {% for id, category in categories.items() %}
-            <li>{{ build_category_link(id, category) }}</li>
-        {% endfor %}
-    </ul>
-    {% block content %}{% endblock %}
+    <div class="row">
+        <div id="left-nav", class="col-md-auto">
+            <ul class="list-unstyled">
+                {% for id, category in categories.items() %}
+                    {% set is_last = loop.index == categories.items()|count  %}
+                    {% set is_active = request.path[1:] == category['normalized_title'] %}
+                    {% set class = "ruled" if not is_last else "" %}
+                    {% set class = class + " active" if is_active else class %}
+                    <li class="{{ class }}">{{ build_category_link(id, category) }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
 {% endblock %}

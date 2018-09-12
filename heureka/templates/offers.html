@@ -1,18 +1,65 @@
 {% extends "base.html" %}
 
 {% block body %}
-    <h1>{{ title }}</h1>
-    <div>
-        <a href="{{ url_for('render_products', category=category['normalized_title'], id=category['categoryId']) }}">{{ category["title"] }}</a>
-        >
-        {{ title }}
+    <div class="row double-top-padding">
+        <div class="col-sm-4 text-center">
+            {% if not img_urls %}
+                <img class="img-thumbnail vertical-center" src="/static/img/placeholder.png" alt="">
+            {% elif img_urls|length == 1 %}
+                <img class="img-thumbnail vertical-center" src="{{ img_urls[0] }}" alt="">
+            {% else %}
+                <div id="img-carousel" class="carousel slide vertical-center" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for img_url in img_urls %}
+                            {% set class = "carousel-item active" if loop.index == 1 else "carousel-item" %}
+                            <div class="{{ class }}">
+                                <img class="img-thumbnail" src="{{ img_url }}" alt="">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#img-carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#img-carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-sm-8">
+            <h2>{{ title }}</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ url_for('render_products', category=category['normalized_title'], id=category['categoryId']) }}">{{ category["title"] }}</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+                </ol>
+            </nav>
+            <p>{{ description }}</p>
+        </div>
     </div>
-    <hr/>
-    <div>{{ img_urls }}</div>
-    <hr/>
-    <p>{{ description }}</p>
-    <hr/>
-    {% for offer in eshops %}
-        <p>{{ offer }}</p>
-    {% endfor %}
+    <div class="row">
+        <div class="col">
+            <h5 class="top-bottom-padding">Porovnání cen</h5>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tbody>
+            {% for offer in eshops %}
+                <tr {% if loop.index > 3 %} class="hidden" {% endif %}</tr>
+                    <td>{{ offer.title }}</td>
+                    <td class="bg-primary text-center"><a href="{{ offer.url }}">Koupit</a></td>
+                    <td class="text-center"><b>{{ offer.price|int }} Kč</b></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <a id="show-products" href="#">zobrazit další nabídky obchodu</a>
+    </div>
 {% endblock %}
