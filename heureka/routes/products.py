@@ -1,8 +1,8 @@
 import sys
+
 sys.path.append("..")
 
 from flask import render_template
-from math import ceil
 from api import get_categories, get_products, get_offers, get_products_count
 from utils import clean_string
 from config import config
@@ -10,6 +10,15 @@ from Pagination import Pagination
 
 
 def get_products_statistics(products):
+    """Enrich products with additional statistics from offers.
+
+    Args:
+        products (list): products of currently selected category
+
+    Returns:
+        list: products with additional statistics
+
+    """
     description_placeholder = config["placeholders"]["description"]
     img_url_placeholder = config["placeholders"]["img_url"]
 
@@ -32,24 +41,35 @@ def get_products_statistics(products):
             if product["img_url"] == img_url_placeholder and offer.get("img_url"):
                 product["img_url"] = offer["img_url"]
 
-    # TODO: solve missing desc and img in template?
     return products
 
+
 def products(category_id, page):
+    """Render products template.
+
+    Args:
+        category_id (int): id of currently selected category
+        page (int): current pagination page
+
+    Returns:
+        render_template function
+
+    """
     products_per_page = config["products"]["pagination"]["per_page"]
 
-    # recollect list of categories for left menu
+    # collect list of categories for left menu
     categories = get_categories()
 
     # collect one page of products for selected category
     offset = page * products_per_page
-    
+
     products = get_products(category_id, offset, products_per_page)
     products = get_products_statistics(products)
-    
+
     # get total products count for pagination
     products_count = get_products_count(category_id)
-    
+
+    # set pagination to correct page
     pagination = Pagination(
         products_per_page,
         config["products"]["pagination"]["truncation_limit"],
@@ -60,10 +80,6 @@ def products(category_id, page):
     )
 
     pagination.set_current(page, products_count)
-    
-    # TODO: async load next page - user is more likely to visit it
-    
-    return render_template("products.html", title="Products",
-                           categories=categories, products=products,
-                           pagination=pagination,
-                           category_id=category_id)
+
+    return render_template("products.html", title="Products", categories=categories, products=products,
+                           pagination=pagination, category_id=category_id)

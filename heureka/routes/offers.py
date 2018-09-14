@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("..")
 
 from flask import render_template
@@ -6,7 +7,17 @@ from api import get_product, get_category, get_offers
 from utils import clean_string
 from config import config
 
+
 def offers(product_id):
+    """Render offers template.
+
+    Args:
+        product_id (int): id of currently selected product
+
+    Returns:
+        render_template function
+
+    """
     description_placeholder = config["placeholders"]["description"]
 
     # download single product info
@@ -36,11 +47,10 @@ def offers(product_id):
         })
 
     # sort offers by price
-    eshops = sorted(eshops, key=lambda dct: dct["price"]) 
+    eshops = sorted(eshops, key=lambda dct: dct["price"])
 
     # just for this homework to remove duplicates
     img_urls = list(set(img_urls))
 
-    return render_template("offers.html", title=product["title"],
-                           category=category, img_urls=img_urls,
+    return render_template("offers.html", title=product["title"], category=category, img_urls=img_urls,
                            description=description, eshops=eshops)

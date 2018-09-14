@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("..")
 
 import unittest
@@ -9,7 +10,7 @@ class TestCache(unittest.TestCase):
     def setUp(self):
         per_page = 2
         truncation_limit = 10
-        
+
         self.pagination = Pagination(per_page, truncation_limit)
 
     def tearDown(self):
@@ -36,14 +37,14 @@ class TestCache(unittest.TestCase):
     def test_has_previous(self):
         self.run_set_current(0, 4)
         self.assertEqual(self.pagination.has_previous, False)
-        
+
         self.run_set_current(1, 4)
         self.assertEqual(self.pagination.has_previous, True)
 
     def test_has_next(self):
         self.run_set_current(0, 4)
         self.assertEqual(self.pagination.has_next, True)
-        
+
         self.run_set_current(1, 4)
         self.assertEqual(self.pagination.has_next, False)
 
@@ -71,4 +72,3 @@ class TestCache(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

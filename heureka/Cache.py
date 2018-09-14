@@ -1,5 +1,5 @@
 from json import dumps
-from inspect import signature, getargspec
+from inspect import getargspec
 from datetime import datetime, timedelta
 from collections import OrderedDict
 
@@ -22,7 +22,7 @@ class Cache(object):
         ...     return a + b + c
 
     """
-    
+
     def __init__(self, max_size=None, max_lifetime=None, group_key=None):
         """Initialize cache storage and limitations.
 
@@ -35,7 +35,7 @@ class Cache(object):
         self.max_size = max_size
         self.max_lifetime = timedelta(seconds=max_lifetime) if max_lifetime else None
         self.group_key = group_key
-        
+
         # initialize cache or dictionary of subcaches
         self.cache = {} if group_key else OrderedDict()
 
@@ -53,11 +53,11 @@ class Cache(object):
 
         """
         args_spec = getargspec(func)
-        
+
         # collect args and kwargs names and their default values
         args_name = args_spec[0]
         kwargs_default_values = list(args_spec[3]) if args_spec[3] else []
-        
+
         args_dict = dict(zip(args_name, list(args) + kwargs_default_values))
 
         # ovewrite default kwargs values with passed kwargs values
@@ -89,7 +89,7 @@ class Cache(object):
                 invalid_keys.append(key)
 
         return invalid_keys
-        
+
     def _add_or_replace(self, key, cache, func, *args, **kwargs):
         """Add records to cache or replace invalid records.
 
@@ -113,13 +113,13 @@ class Cache(object):
         else:
             add_or_replace = True
             pop_allowed = True
-        
+
         # record is not cached yet or is beyond its lifetime
         if add_or_replace:
             # when limit of cached records is reached, pop the oldest one
             if self.max_size and pop_allowed and len(cache) == self.max_size:
                 _, _ = cache.popitem(last=False)
-            
+
             # cache new records
             cache[key] = {
                 "data": func(*args, **kwargs),
@@ -138,6 +138,7 @@ class Cache(object):
             cached value
 
         """
+
         def wrapper(*args, **kwargs):
             """Retrieve record from cache.
 
@@ -174,6 +175,7 @@ class Cache(object):
             if self.max_lifetime:
                 # TODO: is it worth to invalidate cache asynchronously?
                 self._invalidate_by_lifetime()
-            
+
             return cached_result["data"]
+
         return wrapper

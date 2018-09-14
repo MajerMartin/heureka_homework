@@ -76,7 +76,7 @@ class Pagination(object):
                 yield page
         else:
             last = None
-        
+
             for page in range(self.pages_count):
                 # yield sticky pages and current page
                 if page < self.left_edge or \
