@@ -45,3 +45,8 @@ python -m unittest
 * Add logging.
 * Asynchronously preload first page of products for every category.
 * Asynchronously preload next page of products for currently selected category.
+
+## Screenshots
+![Homepage](img/homepage.png?raw=true)
+![Products](img/products.png?raw=true)
+![Offers](img/offers.png?raw=true)
