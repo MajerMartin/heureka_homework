@@ -16,11 +16,10 @@ class Cache(object):
        parameter as key.
 
     Example:
-        from cache import Cache
-
-        @Cache(max_size=5, max_lifetime=10, group_key="c")
-        def func(a, b, c=1):
-            return a + b + c
+        >>> from Cache import Cache
+        >>> @Cache(max_size=5, max_lifetime=10, group_key="c")
+        ... def func(a, b, c=1):
+        ...     return a + b + c
 
     """
     
