@@ -1,5 +1,6 @@
 import re
 import json
+import aiohttp
 from flask import abort, url_for, request
 from unidecode import unidecode
 from urllib.parse import quote
@@ -25,6 +26,27 @@ def get_response(query):
         response = urlopen(request).read()
         return json.loads(response)
     except HTTPError:
+        abort(404)
+
+
+async def get_response_async(query):
+    """Asynchronously get response to API request.
+
+    Note: Query must start with '/'.
+
+    Args:
+        query (str): API request query
+    Returns:
+        dict: data from API
+
+    """
+    base_url = "http://python-servers-vtnovk529892.codeanyapp.com:5000{}"
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(base_url.format(query)) as response:
+                return await response.json()
+    except aiohttp.client_exceptions.ServerDisconnectedError:
         abort(404)
 
 
