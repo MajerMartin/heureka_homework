@@ -3,15 +3,16 @@ import sys
 sys.path.append("..")
 
 from flask import render_template
-from api import get_product, get_category, get_offers
+from api import get_product, get_category, get_offers_async
 from utils import clean_string
 from config import config
 
 
-def offers(product_id):
+def offers(loop, product_id):
     """Render offers template.
 
     Args:
+        loop (asyncio.unix_events._UnixSelectorEventLoop): asyncio event loop
         product_id (int): id of currently selected product
 
     Returns:
@@ -28,7 +29,7 @@ def offers(product_id):
     category["normalized_title"] = clean_string(category["title"])
 
     # download offers
-    offers = get_offers(product_id)
+    offers = loop.run_until_complete(get_offers_async(product_id))
 
     # aggregate offers
     img_urls = []
