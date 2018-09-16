@@ -38,13 +38,14 @@ python -m unittest
 ```
 
 ## Notes
-* API calls are cached using custom TLRU [cache](/heureka/Cache.py).
+* Synchronous API calls are cached using custom TLRU [cache](/heureka/Cache.py). Asynchronous API calls are cached using inherited [asynchronous cache](/heureka/AsyncCache.py) (currently slightly duplicated code).
 * Page settings are defined in global [configuration file](/heureka/config.py).
+* Offers in products page are collected asynchronously.
 
 ## TODO
 * Add logging.
-* Asynchronously preload first page of products for every category.
-* Asynchronously preload next page of products for currently selected category.
+* Refactor Cache.py and AsyncCache.py.
+* Add tests for AsyncCache.py.
 
 ## Screenshots
 ![Homepage](img/homepage.png?raw=true)
