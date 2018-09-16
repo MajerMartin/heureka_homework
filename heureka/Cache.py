@@ -173,7 +173,6 @@ class Cache(object):
 
             # invalidate all records above lifetime threshold
             if self.max_lifetime:
-                # TODO: is it worth to invalidate cache asynchronously?
                 self._invalidate_by_lifetime()
 
             return cached_result["data"]

@@ -1,4 +1,5 @@
 from sys import maxsize
+from AsyncCache import AsyncCache
 from collections import OrderedDict
 from utils import get_response, get_response_async, clean_string
 from Cache import Cache
@@ -42,7 +43,7 @@ def get_product(product_id):
     return get_response("/product/{}".format(product_id))
 
 
-#@Cache(max_lifetime=120)
+@AsyncCache(max_lifetime=120)
 async def get_offers_async(product_id, offset=0, limit=maxsize):
     return await get_response_async("/offers/{}/{}/{}".format(product_id, offset, limit))
 
